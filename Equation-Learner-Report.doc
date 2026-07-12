@@ -1,0 +1,291 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>Equation Learner — Project Report</title>
+<!--[if gte mso 9]><xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+</w:WordDocument>
+</xml><![endif]-->
+<style>
+body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.5; margin: 2cm; }
+h1 { font-size: 18pt; text-align: center; color: #1a1a2e; }
+h2 { font-size: 14pt; color: #4361ee; border-bottom: 1px solid #ccc; padding-bottom: 4pt; margin-top: 24pt; }
+h3 { font-size: 12pt; color: #333; margin-top: 14pt; }
+p { margin: 6pt 0; text-align: justify; }
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; font-size: 11pt; }
+th, td { border: 1px solid #999; padding: 6pt 8pt; vertical-align: top; }
+th { background: #eef1ff; font-weight: bold; }
+ul, ol { margin: 6pt 0 6pt 20pt; }
+li { margin-bottom: 4pt; }
+.cover { text-align: center; margin-top: 80pt; }
+.cover p { text-align: center; }
+.meta { color: #555; font-size: 11pt; }
+.highlight { background: #fffbeb; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+<h1>Equation Learner</h1>
+<p><strong>Interactive Web Application for Learning Linear Equations</strong></p>
+<p class="meta">TDLL 6333 — Technology-Enhanced Learning Design</p>
+<p class="meta">Caritas Tuen Mun Marden Foundation Secondary School</p>
+<p class="meta">Report Date: July 2026</p>
+</div>
+
+<br clear=all style="page-break-before:always">
+
+<h2>Part 1 — App Concept &amp; Educational Value</h2>
+
+<h3>1.1 Context</h3>
+<p>Linear equations are a core topic in the Hong Kong Diploma of Secondary Education (HKDSE) Mathematics curriculum. Students must learn to solve equations of increasing complexity — from simple one-step forms such as <em>x + 3 = 8</em> to multi-fraction expressions such as <em>2(x − 1)/3 − (x + 2)/4 = 0</em>. In typical classroom practice, teachers demonstrate procedures on the board while students copy worked examples into exercise books. Although this approach is efficient for examination preparation, it often treats algebra as a sequence of symbolic rules rather than as a meaningful, balance-preserving transformation.</p>
+<p><strong>Equation Learner</strong> is a browser-based learning application designed for secondary school students. It combines three learning zones — a balance-scale manipulative (Zone 1), an interactive equation canvas (Zone 2), and an HKDSE-style step trace (Zone 3) — into a single responsive interface. A timed bonus game, <strong>DragonBox Adventure</strong>, is unlocked after students complete all eight levels, reinforcing fluency under time pressure.</p>
+
+<h3>1.2 Existing Issues in Learning How to Solve Linear Equations</h3>
+<p>Research and classroom observation suggest several persistent difficulties when students learn linear equations:</p>
+<ol>
+<li><strong>Procedural copying without conceptual understanding.</strong> Students memorise “move terms across the equals sign and flip the sign” without understanding that the same operation must be applied to <em>both sides</em> to preserve equality.</li>
+<li><strong>Symbol manipulation anxiety.</strong> Negative coefficients, fractions, and brackets increase cognitive load. Students often make sign errors or apply operations to only one side of the equation.</li>
+<li><strong>Weak connection between representation and meaning.</strong> Textbook equations are static. Learners do not always see how removing a constant from the left plate of a balance corresponds to subtracting that value from both sides algebraically.</li>
+<li><strong>Limited formative feedback.</strong> In paper-based practice, incorrect steps may not be caught until the final answer is wrong, making it difficult to diagnose <em>where</em> the reasoning broke down.</li>
+<li><strong>Fragmented practice.</strong> Manipulatives, graphing tools, and answer-checking apps are often used separately, so students do not experience one coherent problem-solving workflow aligned with HKDSE written working.</li>
+</ol>
+
+<h3>1.3 Educational Challenge in Learning Linear Equations</h3>
+<p>The central pedagogical challenge is to help learners internalise the <strong>balance principle</strong>: every lawful transformation of an equation must maintain equivalence. This requires students to:</p>
+<ul>
+<li>Identify which term or coefficient is “blocking” isolation of <em>x</em>;</li>
+<li>Select the correct inverse operation (+, −, ×, ÷) and apply it consistently to both sides;</li>
+<li>Combine like terms and simplify progressively;</li>
+<li>Record clear, examination-acceptable working — not only a final numeric answer.</li>
+</ul>
+<p>Equation Learner addresses this challenge by requiring students to <strong>perform</strong> each transformation through direct manipulation (double-click, drag, operation choice) rather than passively watching a demonstration. The app checks whether the equation has reached the solved form <strong>x = a number</strong> before unlocking the next level, ensuring mastery rather than partial progress.</p>
+
+<h3>1.4 Educational Value of Equation Learner</h3>
+<ul>
+<li><strong>Concrete–representational–abstract (CRA) progression:</strong> Balance-scale manipulatives (L1–L4) support concrete reasoning; symbolic drag-and-drop (all levels) bridges to abstract algebra.</li>
+<li><strong>Immediate feedback:</strong> Wrong inverse operations are rejected in the operation modal; correct moves update the equation, scale, and trace simultaneously.</li>
+<li><strong>Scaffolded difficulty:</strong> Eight locked levels follow HKDSE topic sequencing from one-step to synthesis problems.</li>
+<li><strong>Examination alignment:</strong> Zone 3 generates a step-by-step “HKDSE Trace” notebook, modelling how working should be presented in assessments.</li>
+<li><strong>Motivation and consolidation:</strong> Level unlocking, completion badges, and the DragonBox timed game sustain engagement after core skills are acquired.</li>
+</ul>
+
+<h2>Part 2 — Research &amp; Comparison of Existing Apps</h2>
+
+<p>The following table compares Equation Learner with five widely used approaches: Graspable Math, DragonBox, GeoGebra, Photomath, and hands-on equation practice (physical balance or algebra tiles).</p>
+
+<table>
+<tr>
+<th>Tool</th>
+<th>Primary Strength</th>
+<th>Limitation for HKDSE Linear Equations</th>
+<th>Equation Learner Advantage</th>
+</tr>
+<tr>
+<td><strong>Graspable Math</strong></td>
+<td>Fluid drag-and-transform gestures on algebraic expressions; strong sense of symbolic play and exploration.</td>
+<td>Not specifically aligned to HKDSE level progression; limited balance-model integration; no built-in examination-style working trace.</td>
+<td>Combines drag-based transformation with a <em>mandatory</em> inverse-operation modal (both-sides principle) and automatic HKDSE step log.</td>
+</tr>
+<tr>
+<td><strong>DragonBox</strong> (commercial game)</td>
+<td>Excellent gamification; introduces unknowns through visual “creature” metaphors; highly motivating for beginners.</td>
+<td>Metaphor is abstracted from formal notation; does not train fraction/bracket/denominator skills at HKDSE depth; separate from school written format.</td>
+<td>DragonBox Adventure is a <em>bonus</em> using real equations from all 8 levels; main app teaches formal notation first, game reinforces fluency later.</td>
+</tr>
+<tr>
+<td><strong>GeoGebra</strong></td>
+<td>Powerful graphing, geometry, and CAS features; teacher can build custom applets.</td>
+<td>Steep learning curve; general-purpose tool not optimised for linear-equation pedagogy; setup time required per activity.</td>
+<td>Purpose-built for linear equations only; zero teacher configuration; three-zone layout ready for classroom use on day one.</td>
+</tr>
+<tr>
+<td><strong>Photomath</strong></td>
+<td>Instant step-by-step solutions from camera input; useful for homework checking.</td>
+<td>Risk of answer-copying; student is passive recipient of steps; weak manipulation practice and no balance model.</td>
+<td>Student must <em>execute</em> each step; app blocks progress until equation is genuinely solved; trace records <em>their</em> working.</td>
+</tr>
+<tr>
+<td><strong>Hands-on equation</strong> (balance scale / algebra tiles in class)</td>
+<td>Strong embodied cognition; excellent for introductory equality concept.</td>
+<td>Materials management; difficult to represent fractions/brackets at scale; no automatic logging of steps; not available for homework.</td>
+<td>Digital glass fill-level manipulatives (e.g. ½x shown as half-filled pawn) extend the balance model to harder forms while remaining portable.</td>
+</tr>
+</table>
+
+<h3>2.1 Summary of Positioning</h3>
+<p>Equation Learner occupies a niche between <strong>exploratory algebra tools</strong> (Graspable Math, GeoGebra) and <strong>answer engines</strong> (Photomath). It borrows the motivational design philosophy of DragonBox but applies it only after formal skills are established. It preserves the pedagogical value of hands-on balance models while extending accessibility through a single HTML5 web app that runs on student devices without installation.</p>
+
+<h2>Part 3 — Teaching Plan &amp; Pedagogical Integration</h2>
+
+<h3>3.1 The Eight-Level Progression</h3>
+<p>Each level contains three randomised question variants. Levels are locked sequentially; a level unlocks only when the student reaches <strong>x = a number</strong> on the current level.</p>
+
+<table>
+<tr><th>Level</th><th>Title</th><th>Equation Pattern</th><th>Example</th><th>HKDSE Skill Focus</th></tr>
+<tr><td>L1</td><td>Fundamental one-step Addition &amp; Subtraction</td><td>x + b = c</td><td>x + 3 = 8</td><td>Inverse add/subtract; equality as balance</td></tr>
+<tr><td>L2</td><td>Multiplicative one-step equations</td><td>ax = b</td><td>3x = 12</td><td>Division/multiplication to isolate x</td></tr>
+<tr><td>L3</td><td>Two-step standard equations</td><td>ax + b = c</td><td>2x + 3 = 11</td><td>Order of operations in solving</td></tr>
+<tr><td>L4</td><td>Combining like terms (both sides)</td><td>ax + b = cx + d</td><td>2x + 3 = x + 8</td><td>Collecting variable and constant terms</td></tr>
+<tr><td>L5</td><td>Removing brackets</td><td>a(x + b) = c</td><td>2(x + 3) = 14</td><td>Distributive law / expansion before solving</td></tr>
+<tr><td>L6</td><td>Eliminating denominators</td><td>(x + a) / b = c</td><td>(x + 2) / 3 = 4</td><td>Multiply both sides by LCD</td></tr>
+<tr><td>L7</td><td>Bracket &amp; denominator combo</td><td>a(x + b) / c = d</td><td>2(x + 1) / 3 = 4</td><td>Integrated fraction and bracket handling</td></tr>
+<tr><td>L8</td><td>Ultimate synthesis</td><td>a(x−b)/c − (x+d)/e = f</td><td>2(x−1)/3 − (x+2)/4 = 0</td><td>Full HKDSE-style multi-fraction equations</td></tr>
+</table>
+
+<h3>3.2 Pedagogy of the Three Zones</h3>
+
+<h3>Zone 1 — The Anchor (Balance Scale with Manipulatives)</h3>
+<p><strong>Visible on Levels 1–4 only</strong> (hidden on harder levels to reduce visual clutter).</p>
+<ul>
+<li><strong>Pedagogical role:</strong> Embodied representation of equality. Left and right plates tilt when the symbolic equation is unbalanced, giving immediate visual feedback.</li>
+<li><strong>Manipulative design:</strong> Glass containers with liquid fill levels — e.g. a pawn filled to 50% represents ½x; unit cubes represent constants. Positive and negative values use distinct visual styling.</li>
+<li><strong>Teaching integration:</strong> Use in introductory lessons to answer “Why must we do the same thing to both sides?” before students transition to purely symbolic work in L5–L8.</li>
+</ul>
+
+<h3>Zone 2 — The Action Canvas (Interactive Equation Workspace)</h3>
+<p><strong>Active on all levels.</strong></p>
+<ul>
+<li><strong>Pedagogical role:</strong> Primary problem-solving environment. Students double-click a term to “arm” it, drag across the equals sign, and choose the inverse operation in a modal — enforcing deliberate, reflective moves.</li>
+<li><strong>Additional interactions:</strong> Double-click coefficients or denominators for ×/÷ modals; drag like terms together to merge; distribution arcs for grouped expressions.</li>
+<li><strong>Teaching integration:</strong> Supports guided inquiry — teacher asks “What operation removes this term?” before students commit. Shuffle button (↻ New) provides fresh variants within the same level.</li>
+</ul>
+
+<h3>Zone 3 — The HKDSE Trace (Step-by-Step Working)</h3>
+<p><strong>Active on all levels.</strong></p>
+<ul>
+<li><strong>Pedagogical role:</strong> Mirrors examination working format. Every lawful transformation is logged with equation state and explanatory note (e.g. “Subtract 3 from both sides”).</li>
+<li><strong>Teaching integration:</strong> Teachers can ask students to screenshot or copy their trace for formative assessment. Successful level completion is highlighted in the trace. Encourages habit of showing method, not only answers.</li>
+</ul>
+
+<h3>3.3 Suggested Lesson Sequence (4-week unit)</h3>
+<table>
+<tr><th>Week</th><th>Levels</th><th>Classroom Focus</th></tr>
+<tr><td>1</td><td>L1–L2</td><td>Introduce balance model (Zone 1); one-step equations; homework on app</td></tr>
+<tr><td>2</td><td>L3–L4</td><td>Two-step and like terms; reduce Zone 1 reliance; emphasise trace quality</td></tr>
+<tr><td>3</td><td>L5–L6</td><td>Brackets and fractions; link to textbook exercises</td></tr>
+<tr><td>4</td><td>L7–L8 + DragonBox</td><td>Synthesis problems; timed game for revision; leaderboard discussion</td></tr>
+</table>
+
+<h3>3.4 DragonBox Adventure (Post-L8 Bonus)</h3>
+<p>After completing Level 8, students unlock a 30-second timed game with shuffled questions from all levels. Each solve awards points (L1–2: 5 pts; L3–4: 10 pts; L5–7: 15 pts; L8: 20 pts) and +5 bonus seconds. Results are saved to a local leaderboard and exported automatically to <strong>DragonBox-Leaderboard.csv</strong> (Excel-compatible). Students must enter their name before each round.</p>
+
+<h2>Part 4 — UI / UX Design Quality</h2>
+
+<h3>4.1 Layout &amp; Responsive Design</h3>
+<ul>
+<li><strong>Three-zone mobile-first layout:</strong> Portrait screen divided into Anchor (25–30%), Canvas (40%), and Trace (35%) with fluid clamp-based sizing for phones and tablets.</li>
+<li><strong>Difficulty-adaptive Zone 1:</strong> Balance scale height adjusts by level — prominent on easy levels, minimised on hard levels.</li>
+<li><strong>Level 8 compact equation mode:</strong> Long fraction equations auto-scale to fit one row without horizontal scrolling.</li>
+</ul>
+
+<h3>4.2 Interaction Design Features</h3>
+<table>
+<tr><th>Feature</th><th>UX Purpose</th></tr>
+<tr><td>Double-click to arm term</td><td>Prevents accidental drags; makes intention explicit before crossing equals sign</td></tr>
+<tr><td>Operation modal (+, −, ×, ÷)</td><td>Forces conscious choice of inverse operation; wrong answers show visual feedback without crashing flow</td></tr>
+<tr><td>Equals-sign highlight on drag</td><td>Signals when student is crossing boundary — critical conceptual moment</td></tr>
+<tr><td>Like-term merge by drag</td><td>Natural gesture for collecting terms; reduces notational errors</td></tr>
+<tr><td>Level picker with lock / complete states</td><td>Clear progress visibility (🔒 locked, ✓ completed, active highlight)</td></tr>
+<tr><td>Toast notifications</td><td>Non-blocking feedback for unlock events and game bonuses</td></tr>
+<tr><td>HKDSE Trace notebook styling</td><td>Familiar “exercise book” aesthetic builds transfer to paper examinations</td></tr>
+</table>
+
+<h3>4.3 Visual Design</h3>
+<ul>
+<li><strong>Colour coding:</strong> Blue accent for UI; green for variables; amber for fractions/groups; glass liquid fill for manipulatives.</li>
+<li><strong>Math typography:</strong> Cambria Math / Times New Roman serif for equation terms — matches school materials.</li>
+<li><strong>DragonBox dark theme:</strong> Separate visual identity for bonus game; high-contrast equation board (dark text on white canvas) for readability.</li>
+<li><strong>Accessibility considerations:</strong> ARIA labels on scale plates and manipulatives; aria-live toast region; keyboard-focusable modal choices.</li>
+</ul>
+
+<h3>4.4 UX Flow Summary</h3>
+<p>Open app → load saved progress → select unlocked level → solve via Zone 2 interactions → see Zone 1 balance + Zone 3 trace update in real time → reach x = number → unlock next level → complete L8 → DragonBox bonus → name entry → timed play → leaderboard + Excel export.</p>
+
+<h2>Part 5 — Technical Reflection &amp; Tools Used</h2>
+
+<h3>5.1 Technology Stack</h3>
+<table>
+<tr><th>Component</th><th>Technology</th><th>Role</th></tr>
+<tr><td>Frontend</td><td>HTML5, CSS3, Vanilla JavaScript</td><td>No framework dependency; runs offline from local folder</td></tr>
+<tr><td>Equation engine</td><td>Custom AST in state.js</td><td>Terms: variable, constant, group, fraction; normalize, clone, mutate</td></tr>
+<tr><td>Rendering &amp; input</td><td>equation.js</td><td>DOM equation row, drag-and-drop, operation modal, level UI</td></tr>
+<tr><td>Balance scale</td><td>app.js</td><td>Fill-level glass manipulatives; beam tilt from symbolic state</td></tr>
+<tr><td>Progress</td><td>progress.js</td><td>Cookie + localStorage dual persistence with in-memory cache</td></tr>
+<tr><td>Level data</td><td>levels.js</td><td>8 levels × 3 questions as declarative JSON-like structures</td></tr>
+<tr><td>DragonBox game</td><td>dragonbox-game.js, dragonbox-results.js</td><td>Timer, scoring, leaderboard, CSV export</td></tr>
+</table>
+
+<h3>5.2 Comparison: Using Gemini vs Cursor to Build This App</h3>
+
+<table>
+<tr><th>Aspect</th><th>Google Gemini</th><th>Cursor (AI-assisted IDE)</th></tr>
+<tr>
+<td><strong>Working mode</strong></td>
+<td>Conversational chat; generates code snippets or explanations in isolation; user must copy, paste, and integrate manually across files.</td>
+<td>Agent works <em>inside</em> the project folder — reads, edits, and creates multiple files in one session with awareness of existing code.</td>
+</tr>
+<tr>
+<td><strong>Codebase coherence</strong></td>
+<td>Risk of inconsistent naming, duplicate logic, or overwritten features when prompts are given separately over time.</td>
+<td>Maintains conventions across state.js, equation.js, app.js, etc.; refactors propagate consistently (e.g. level-unlock fix in progress.js + state.js together).</td>
+</tr>
+<tr>
+<td><strong>Debugging</strong></td>
+<td>User describes errors; Gemini suggests fixes hypothetically without running the app.</td>
+<td>Agent can grep codebase, read terminal output, trace bug (e.g. Google Sheet CORS, text/background contrast), and apply targeted patches.</td>
+</tr>
+<tr>
+<td><strong>Iteration speed</strong></td>
+<td>Fast for single algorithms or explanations; slower for multi-file UI features (DragonBox + leaderboard + Excel).</td>
+<td>Faster for end-to-end features: “add name prompt before game”, “auto CSV export”, “fix unlock bug” implemented in one workflow.</td>
+</tr>
+<tr>
+<td><strong>Best use case</strong></td>
+<td>Lesson planning, explaining pedagogy, drafting reports, brainstorming level designs.</td>
+<td>Building, wiring, testing, and refining a multi-zone interactive web application.</td>
+</tr>
+</table>
+
+<h3>5.3 Key Cursor (“Vibe Coding”) Features Used to Build Equation Learner</h3>
+<p>“Vibe coding” refers to describing desired behaviour in natural language and letting the AI agent implement it iteratively. The following Cursor capabilities were especially valuable for this project:</p>
+
+<ol>
+<li><strong>Multi-file Agent mode:</strong> User described “double-click term then drag across equals with operation modal” — agent updated equation.js (gestures), state.js (mutations), and styles.css (armed/selected states) coherently.</li>
+<li><strong>Codebase search (semantic grep):</strong> When level unlock failed, agent traced <em>isEquationSolved</em>, <em>markLevelComplete</em>, and <em>progress.js</em> cookie issues without user specifying file names.</li>
+<li><strong>Incremental refinement:</strong> Features evolved through conversation — fill-level manipulatives → level locking → DragonBox game → leaderboard → name prompt — each building on prior code rather than restarting.</li>
+<li><strong>Context from conversation history:</strong> Agent remembered script load order (levels.js → progress.js → state.js → equation.js → app.js) and avoided breaking dependencies.</li>
+<li><strong>Live project editing:</strong> Direct writes to OneDrive project folder; student/teacher opens index.html in browser immediately after changes.</li>
+<li><strong>Scoped changes:</strong> User rules encouraged minimal diffs — fixing contrast on DragonBox white equation canvas without altering main app theme.</li>
+</ol>
+
+<h3>5.4 Technical Challenges &amp; Solutions</h3>
+<table>
+<tr><th>Challenge</th><th>Solution</th></tr>
+<tr><td>Progress not saving on file:// / OneDrive paths</td><td>Dual-write to cookie and localStorage with in-memory cache</td></tr>
+<tr><td>Level unlock too strict</td><td>Normalize terms before checking; accept |coeff| = 1 and negative constants</td></tr>
+<tr><td>Long L8 equations overflow screen</td><td>equation-canvas--compact with fitEquationToCanvas() scaling</td></tr>
+<tr><td>DragonBox text invisible on white canvas</td><td>Scoped CSS variables forcing dark ink inside .db-equation-canvas</td></tr>
+<tr><td>Google Sheets unreliable from static HTML</td><td>Replaced with automatic CSV export + localStorage leaderboard</td></tr>
+</table>
+
+<h3>5.5 Future Development</h3>
+<ul>
+<li>Teacher dashboard for class-wide CSV aggregation</li>
+<li>Traditional Chinese UI option for EMI/CMI classrooms</li>
+<li>Peer review mode comparing student traces side-by-side</li>
+<li>Optional backend for cloud leaderboard across devices</li>
+</ul>
+
+<br>
+<p style="text-align:center; margin-top:40pt; color:#666; font-size:10pt;">
+— End of Report —<br>
+Equation Learner © 2026 · TDLL 6333 Project
+</p>
+
+</body>
+</html>

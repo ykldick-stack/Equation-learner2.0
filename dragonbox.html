@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a0f2e">
+  <title>DragonBox Adventure — Equation Learner</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dragonbox.css">
+</head>
+<body class="db-body">
+  <div class="db-locked" id="db-locked" hidden>
+    <h1>🔒 DragonBox is locked</h1>
+    <p>Complete all 8 levels in Equation Learner to unlock this bonus game.</p>
+    <p><a href="index.html">← Back to Equation Learner</a></p>
+  </div>
+
+  <div class="db-app" id="db-app" hidden>
+    <header class="db-header">
+      <a class="db-back" href="index.html">← Equation Learner</a>
+      <h1 class="db-title">DragonBox Adventure</h1>
+      <button type="button" class="db-btn db-btn--small" id="db-restart-btn">↻ Restart</button>
+    </header>
+
+    <section class="db-hud" aria-label="Game status">
+      <div class="db-hud__item db-hud__item--timer">
+        <span class="db-hud__label">Time</span>
+        <span class="db-hud__value" id="db-timer">30</span>
+      </div>
+      <div class="db-hud__item db-hud__item--score">
+        <span class="db-hud__label">Score</span>
+        <span class="db-hud__value" id="db-score">0</span>
+      </div>
+      <div class="db-hud__item db-hud__item--puzzles">
+        <span class="db-hud__label">Solved</span>
+        <span class="db-hud__value" id="db-solved">0</span>
+      </div>
+    </section>
+
+    <section class="db-stage" aria-label="Dragon box">
+      <div class="db-dragon-box">
+        <span class="db-dragon" id="db-dragon" role="img" aria-label="Dragon">🐲</span>
+        <span class="db-box-label">Free the dragon — isolate x!</span>
+      </div>
+      <p class="db-puzzle-label" id="db-puzzle-label">Loading…</p>
+      <p class="db-points-label" id="db-points-label"></p>
+    </section>
+
+    <section class="db-board" id="db-board" aria-label="Equation puzzle">
+      <div class="equation-canvas db-equation-canvas" id="equation-canvas">
+        <svg class="distribution-svg" id="distribution-svg" aria-hidden="true"></svg>
+        <div class="equation-row" id="equation-row"></div>
+      </div>
+      <p class="db-hint">
+        <strong>Double-click a term</strong> to select it, then drag across <strong>=</strong>.
+        Each puzzle solved: <strong>+5 seconds</strong> and points by difficulty.
+      </p>
+      <p class="db-score-key">L1–2: 5 pts · L3–4: 10 pts · L5–7: 15 pts · L8: 20 pts</p>
+    </section>
+
+    <div class="db-start" id="db-start" hidden>
+      <div class="db-start__panel" role="dialog" aria-modal="true" aria-labelledby="db-start-title">
+        <h2 class="db-start__title" id="db-start-title">🐲 DragonBox Adventure</h2>
+        <p class="db-start__text">Enter your name before the timer starts.</p>
+        <label class="db-start__label" for="db-player-name">Your name</label>
+        <input type="text" id="db-player-name" class="db-start__input" maxlength="60" placeholder="e.g. Alex" autocomplete="name" required>
+        <p class="db-start__error" id="db-start-error" hidden>Please enter your name to play.</p>
+        <button type="button" class="db-btn" id="db-start-btn">Start game</button>
+      </div>
+    </div>
+
+    <div class="db-gameover" id="db-gameover" hidden>
+      <div class="db-gameover__panel">
+        <h2>Time's up!</h2>
+        <p class="db-gameover__score">Score: <strong id="db-final-score">0</strong></p>
+        <p class="db-gameover__detail" id="db-final-detail"></p>
+        <p class="db-gameover__rank" id="db-final-rank" hidden></p>
+
+        <h3 class="db-section-title">🏆 Leaderboard</h3>
+        <div class="db-results-table-wrap db-results-table-wrap--leaderboard" aria-label="Leaderboard">
+          <table class="db-results-table db-results-table--leaderboard" id="db-leaderboard-table">
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Player</th>
+                <th scope="col">Score</th>
+                <th scope="col">Solved</th>
+                <th scope="col">Date</th>
+              </tr>
+            </thead>
+            <tbody id="db-leaderboard-body"></tbody>
+          </table>
+          <p class="db-results-empty" id="db-leaderboard-empty" hidden>No scores yet. Play a round!</p>
+        </div>
+
+        <h3 class="db-section-title">This round</h3>
+
+        <div class="db-results-table-wrap" aria-label="Session results">
+          <table class="db-results-table" id="db-results-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Level</th>
+                <th scope="col">Equation</th>
+                <th scope="col">Pts</th>
+              </tr>
+            </thead>
+            <tbody id="db-results-body"></tbody>
+          </table>
+          <p class="db-results-empty" id="db-results-empty" hidden>No puzzles solved this round.</p>
+        </div>
+
+        <p class="db-save-status" id="db-save-status" role="status" aria-live="polite"></p>
+
+        <div class="db-gameover__actions">
+          <button type="button" class="db-btn" id="db-download-excel-btn">Download Excel</button>
+          <button type="button" class="db-btn" id="db-play-again-btn">Play again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden stubs for equation.js -->
+  <ol id="step-trace" hidden aria-hidden="true"></ol>
+  <div id="level-picker" hidden aria-hidden="true"></div>
+  <p id="level-info" hidden aria-hidden="true"></p>
+
+  <!-- Operation modal (shared with main app) -->
+  <div class="op-modal" id="op-modal" hidden>
+    <div class="op-modal__backdrop" data-dismiss="modal"></div>
+    <div class="op-modal__panel" role="dialog" aria-modal="true" aria-labelledby="op-modal-title">
+      <h3 class="op-modal__title" id="op-modal-title">What must we do to BOTH sides?</h3>
+      <p class="op-modal__context" id="op-modal-context"></p>
+      <div class="op-modal__choices" id="op-modal-choices"></div>
+      <button type="button" class="op-modal__cancel" id="op-modal-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+  <script src="levels.js"></script>
+  <script src="progress.js"></script>
+  <script src="state.js"></script>
+  <script src="equation.js"></script>
+  <script src="dragonbox-results.js"></script>
+  <script src="dragonbox-game.js"></script>
+</body>
+</html>
