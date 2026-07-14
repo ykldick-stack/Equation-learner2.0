@@ -110,31 +110,52 @@
           numWrap.appendChild(op);
         }
         if (inner.kind === "group") {
-          const gCoeff = document.createElement("span");
-          gCoeff.className = "math-term__coeff math-term--coeff-tap";
-          gCoeff.dataset.coeff = inner.coeff;
-          gCoeff.dataset.groupId = inner.id;
-          gCoeff.textContent = String(inner.coeff);
-          gCoeff.title = "Click to distribute · Double-click to × or ÷ both sides";
-          numWrap.appendChild(gCoeff);
-          numWrap.appendChild(document.createTextNode("("));
+          const gOutside = Number(inner.coeff);
+          const unitOutside =
+            !Number.isFinite(gOutside) || Math.abs(Math.abs(gOutside) - 1) < 1e-9;
+
+          if (!unitOutside) {
+            const gCoeff = document.createElement("span");
+            gCoeff.className = "math-term__coeff math-term--coeff-tap";
+            gCoeff.dataset.coeff = inner.coeff;
+            gCoeff.dataset.groupId = inner.id;
+            gCoeff.textContent = String(inner.coeff);
+            gCoeff.title = "Double-click ÷ to divide this numerator coefficient from both sides";
+            numWrap.appendChild(gCoeff);
+            numWrap.appendChild(document.createTextNode("("));
+          }
+
           const innerWrap = document.createElement("span");
           innerWrap.className = "math-term__group-inner";
-          inner.inner.forEach((t, j) => {
+          const factor =
+            unitOutside
+              ? (Number.isFinite(gOutside) ? gOutside : 1) * (inner.sign === -1 ? -1 : 1)
+              : 1;
+          (inner.inner || []).forEach((t, j) => {
             if (j > 0) {
               const plus = document.createElement("span");
               plus.className = "math-term__inner-op";
               plus.textContent = "+";
               innerWrap.appendChild(plus);
             }
-            innerWrap.appendChild(makeTermElement(t, side, j === 0));
+            const scaled =
+              factor === 1
+                ? t
+                : t.kind === "variable"
+                  ? { ...t, coeff: t.coeff * factor }
+                  : t.kind === "constant"
+                    ? { ...t, value: t.value * factor }
+                    : t;
+            innerWrap.appendChild(makeTermElement(scaled, side, j === 0));
           });
           innerWrap.querySelectorAll(".math-term--movable").forEach((el) => {
             el.classList.remove("math-term--movable");
             el.removeAttribute("draggable");
           });
           numWrap.appendChild(innerWrap);
-          numWrap.appendChild(document.createTextNode(")"));
+          if (!unitOutside) {
+            numWrap.appendChild(document.createTextNode(")"));
+          }
         } else {
           const innerEl = makeTermElement(inner, side, i === 0);
           innerEl.classList.remove("math-term--movable");
@@ -160,6 +181,46 @@
     }
 
     if (term.kind === "group") {
+      const outside = Number(term.coeff);
+      const unitOutside =
+        !Number.isFinite(outside) || Math.abs(Math.abs(outside) - 1) < 1e-9;
+
+      // 1(x + 3) or −1(x + 3) → show inner terms without brackets
+      if (unitOutside) {
+        const factor = (Number.isFinite(outside) ? outside : 1) * (term.sign === -1 ? -1 : 1);
+        const wrap = document.createElement("span");
+        wrap.className = "math-term math-term--group-unwrapped";
+        wrap.dataset.termId = term.id;
+        wrap.dataset.side = side;
+        (term.inner || []).forEach((inner, i) => {
+          const scaled =
+            factor === 1
+              ? inner
+              : inner.kind === "variable"
+                ? { ...inner, coeff: inner.coeff * factor }
+                : inner.kind === "constant"
+                  ? { ...inner, value: inner.value * factor }
+                  : inner;
+          if (i > 0) {
+            const plus = document.createElement("span");
+            plus.className = "math-term math-term--operator";
+            const needsMinus =
+              (scaled.kind === "variable" && scaled.coeff < 0) ||
+              (scaled.kind === "constant" && scaled.value < 0);
+            plus.textContent = needsMinus ? "−" : "+";
+            wrap.appendChild(plus);
+            if (scaled.kind === "variable" && scaled.coeff < 0) {
+              scaled.coeff = Math.abs(scaled.coeff);
+            } else if (scaled.kind === "constant" && scaled.value < 0) {
+              scaled.value = Math.abs(scaled.value);
+            }
+          }
+          const innerEl = makeTermElement(scaled, side);
+          wrap.appendChild(innerEl);
+        });
+        return wrap;
+      }
+
       const group = document.createElement("span");
       group.className = "math-term math-term--group";
 

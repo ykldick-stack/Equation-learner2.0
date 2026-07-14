@@ -144,8 +144,8 @@
 
     const equationState = {
       type: "equation",
-      left: { type: "side", side: "left", terms: cloneTerms(question.left) },
-      right: { type: "side", side: "right", terms: cloneTerms(question.right) },
+      left: { type: "side", side: "left", terms: normalizeSide(cloneTerms(question.left)) },
+      right: { type: "side", side: "right", terms: normalizeSide(cloneTerms(question.right)) },
     };
     assignIds(equationState);
 
@@ -351,7 +351,29 @@
       .replace(/^\+\s/, "");
   }
 
+  function isUnitOutsideCoeff(coeff) {
+    if (coeff === undefined || coeff === null || coeff === "") return true;
+    const c = Number(coeff);
+    if (!Number.isFinite(c)) return true;
+    return Math.abs(Math.abs(c) - 1) < 1e-9;
+  }
+
   function formatGroup(term, isFirst) {
+    // 1(x + 3) or (x + 3) → drop brackets in the written trace
+    if (isUnitOutsideCoeff(term.coeff)) {
+      const factor = (Number(term.coeff) || 1) * (term.sign === -1 ? -1 : 1);
+      const expanded = (term.inner || []).map((t) => {
+        if (t.kind === "variable") {
+          return { kind: "variable", coeff: t.coeff * factor, variable: t.variable };
+        }
+        if (t.kind === "constant") {
+          return { kind: "constant", value: t.value * factor };
+        }
+        return t;
+      });
+      const text = formatInnerTerms(expanded);
+      return isFirst ? text : `+ ${text}`.replace("+ −", "− ");
+    }
     const inner = formatInnerTerms(term.inner);
     const wrapped = `(${inner})`;
     const text = `${term.coeff}${wrapped}`;
@@ -411,9 +433,62 @@
 
   /* ── Mutations ────────────────────────────────────────────── */
 
+  function expandUnitGroup(group) {
+    const sign = group.sign === -1 ? -1 : 1;
+    const rawCoeff = Number(group.coeff);
+    const coeff = Number.isFinite(rawCoeff) ? rawCoeff : 1;
+    const factor = coeff * sign;
+    return (group.inner || []).map((t) => {
+      if (t.kind === "variable") {
+        return {
+          kind: "variable",
+          coeff: t.coeff * factor,
+          variable: t.variable,
+          id: t.id || nextId(),
+        };
+      }
+      if (t.kind === "constant") {
+        return {
+          kind: "constant",
+          value: t.value * factor,
+          id: t.id || nextId(),
+        };
+      }
+      if (t.kind === "group") {
+        const nested = Number(t.coeff);
+        return {
+          ...t,
+          coeff: (Number.isFinite(nested) ? nested : 1) * factor,
+          id: t.id || nextId(),
+        };
+      }
+      return { ...t, id: t.id || nextId() };
+    });
+  }
+
+  function unwrapUnitGroupsInList(terms) {
+    const out = [];
+    terms.forEach((term) => {
+      // 1(…) or −1(…) → drop brackets and expand inner terms
+      if (term.kind === "group" && isUnitOutsideCoeff(term.coeff)) {
+        unwrapUnitGroupsInList(expandUnitGroup(term)).forEach((t) => out.push(t));
+        return;
+      }
+      if (term.kind === "fraction") {
+        out.push({
+          ...term,
+          numTerms: unwrapUnitGroupsInList(term.numTerms || []),
+        });
+        return;
+      }
+      out.push(term);
+    });
+    return out;
+  }
+
   function normalizeSide(terms) {
     const merged = [];
-    terms.forEach((term) => {
+    unwrapUnitGroupsInList(terms).forEach((term) => {
       if (term.kind === "group" || term.kind === "fraction") {
         merged.push(term);
         return;
@@ -457,13 +532,29 @@
     return copy;
   }
 
+  function divideNumeratorTerms(numTerms, divisor) {
+    return numTerms.map((nt) => {
+      if (nt.kind === "variable") return { ...nt, coeff: nt.coeff / divisor };
+      if (nt.kind === "constant") return { ...nt, value: nt.value / divisor };
+      if (nt.kind === "group") return { ...nt, coeff: nt.coeff / divisor };
+      return nt;
+    });
+  }
+
   function divideSide(terms, divisor) {
     return terms
       .map((t) => {
         if (t.kind === "variable") return { ...t, coeff: t.coeff / divisor };
         if (t.kind === "constant") return { ...t, value: t.value / divisor };
         if (t.kind === "group") return { ...t, coeff: t.coeff / divisor };
-        if (t.kind === "fraction") return { ...t, denom: t.denom * divisor };
+        // e.g. Level 7: 2(x+1)/3 ÷ 2 → 1(x+1)/3 → unwraps to (x+1)/3
+        // Divide the numerator (not multiply the denominator) so coeffs cancel cleanly
+        if (t.kind === "fraction") {
+          return {
+            ...t,
+            numTerms: divideNumeratorTerms(t.numTerms || [], divisor),
+          };
+        }
         return t;
       })
       .filter((t) => {
@@ -506,6 +597,9 @@
 
   function commitMove(action, note, mutator) {
     mutator(appState.equationState);
+    // Always unwrap 1(…) / −1(…) on both sides after every move
+    appState.equationState.left.terms = normalizeSide(appState.equationState.left.terms);
+    appState.equationState.right.terms = normalizeSide(appState.equationState.right.terms);
     assignIds(appState.equationState);
     appState.scaleState = computeScaleState(appState.equationState);
     recordTrace(note, action);
